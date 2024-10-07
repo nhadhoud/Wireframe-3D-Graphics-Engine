@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import javafx.scene.input.MouseEvent;
 
 
-public class GUI extends Application {
+public class Main extends Application {
     private static final int SCREEN_WIDTH = 1200;
     private static final int SCREEN_HEIGHT = 600;
     private float zoomAmount = 250;
