@@ -29,6 +29,8 @@ public class Main extends Application {
     private float zoomAmount = 250;
     private static final float ZOOM_SENSITIVITY = 0.5f;
     private static final float DRAG_SENSITIVITY = 0.1f;
+    private float initialMouseX;
+    private float initialMouseY;
     private float dragMouseX;
     private float dragMouseY;
     private ArrayList<Shape> defaultShapes = new ArrayList<>(); 
@@ -68,7 +70,7 @@ public class Main extends Application {
         
         Button loadButton = new Button("Load");
         loadButton.setOnAction(event -> {
-            String fileName = fileNameInput.getText();
+            String fileName = "assets/" + fileNameInput.getText();
             loadedShapes.add(loadShape(fileName));
         });
         
@@ -79,11 +81,14 @@ public class Main extends Application {
         canvas.setOnScroll(event -> {
             zoomAmount += (float) event.getDeltaY() * ZOOM_SENSITIVITY;
         });
-        canvas.setOnMouseDragged(event -> {
-            dragMouseX = (float) (event.getX());
-            dragMouseY = (float) (event.getY());
+        canvas.setOnMousePressed(event -> {
+            initialMouseX = (float) event.getX();
+            initialMouseY = (float) event.getY();
         });
-
+        canvas.setOnMouseDragged(event -> {
+            dragMouseX += (float) (event.getX() - initialMouseX) * 0.1;
+            dragMouseY += (float) (event.getY()- initialMouseY) * 0.1;
+        });
         
         root.setTop(buttonContainer);
         root.setCenter(canvas);
@@ -128,23 +133,38 @@ public class Main extends Application {
     }
 
     private void addCube() {
-        Shape cube = loadShape("file:assets/cube.obj");
+        Shape cube = loadShape("assets/cube.obj");
+        if (cube != null) {
+            defaultShapes.add(cube);
+        }
     }
     
     private void addPyramid() {
-        Shape pyramid = loadShape("file:assets/pyramid.obj");
+        Shape pyramid = loadShape("assets/pyramid.obj");
+        if (pyramid != null) {
+            defaultShapes.add(pyramid);
+        }
     }
     
     private void addSphere() {
-        Shape sphere = loadShape("file:assets/sphere.obj");
+        Shape sphere = loadShape("assets/sphere.obj");
+        if (sphere != null) {
+            defaultShapes.add(sphere);
+        }
     }
     
     private void addTorus() {
-        Shape torus = loadShape("file:assets/torus.obj");
+        Shape torus = loadShape("assets/torus.obj");
+        if (torus != null) {
+            defaultShapes.add(torus);
+        }
     }
     
     private void addCylinder() {
-        Shape cylinder = loadShape("file:assets/cylinder.obj");
+        Shape cylinder = loadShape("assets/cylinder.obj");
+        if (cylinder != null) {
+            defaultShapes.add(cylinder);
+        }
     }
     
     private void clearShapes() {
@@ -161,7 +181,7 @@ public class Main extends Application {
     
     private Shape loadShape(String fileName) {
         try {
-            return ObjFileLoader.loadShape("assets/" + fileName);
+            return ObjFileLoader.loadShape(fileName);
         } 
         catch (Exception e) {
             Alert alert = new Alert(AlertType.ERROR);
