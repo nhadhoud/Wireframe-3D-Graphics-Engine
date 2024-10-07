@@ -2,8 +2,8 @@ import javafx.scene.canvas.GraphicsContext;
 import java.util.Arrays;
 
 public class Shape {
-    private float[][] vertices;
-    private float[][] transformedVertices;
+    private final float[][] vertices;
+    private final float[][] transformedVertices;
     private int[][] edges; // references to connected vertices
     private static float defaultOriginX;
     private static float defaultOriginY;
