@@ -1,17 +1,17 @@
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.DragEvent;
 import javafx.scene.Scene;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.ScrollEvent;
-import javafx.scene.input.DragEvent;
 import javafx.scene.image.Image;
 import javafx.scene.control.TextField;
 import javafx.animation.KeyFrame;
@@ -20,7 +20,6 @@ import javafx.util.Duration;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import java.util.ArrayList;
-import javafx.scene.input.MouseEvent;
 
 
 public class Main extends Application {
@@ -29,8 +28,8 @@ public class Main extends Application {
     private float zoomAmount = 250;
     private static final float ZOOM_SENSITIVITY = 0.5f;
     private static final float DRAG_SENSITIVITY = 0.1f;
-    private float initialMouseX;
-    private float initialMouseY;
+    private float previousMouseX;
+    private float previousMouseY;
     private float dragMouseX;
     private float dragMouseY;
     private ArrayList<Shape> defaultShapes = new ArrayList<>(); 
@@ -66,7 +65,7 @@ public class Main extends Application {
         clearButton.setOnAction(event -> {clearShapes();});
         
         TextField fileNameInput = new TextField();
-        fileNameInput.setPromptText("Enter filename: ");
+        fileNameInput.setPromptText("Enter filename:");
         
         Button loadButton = new Button("Load");
         loadButton.setOnAction(event -> {
@@ -81,13 +80,11 @@ public class Main extends Application {
         canvas.setOnScroll(event -> {
             zoomAmount += (float) event.getDeltaY() * ZOOM_SENSITIVITY;
         });
-        canvas.setOnMousePressed(event -> {
-            initialMouseX = (float) event.getX();
-            initialMouseY = (float) event.getY();
-        });
         canvas.setOnMouseDragged(event -> {
-            dragMouseX += (float) (event.getX() - initialMouseX) * 0.1;
-            dragMouseY += (float) (event.getY()- initialMouseY) * 0.1;
+            dragMouseX += (float) (event.getX() - previousMouseX) * 0.1;
+            dragMouseY += (float) (event.getY()- previousMouseY) * 0.1;
+            previousMouseX = dragMouseX;
+            previousMouseY = dragMouseY;
         });
         
         root.setTop(buttonContainer);
@@ -100,7 +97,6 @@ public class Main extends Application {
         timeline.setCycleCount(Timeline.INDEFINITE); 
         timeline.play();
 
-        
         Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
         scene.setOnKeyPressed(event -> {
             float translationX = 0;
