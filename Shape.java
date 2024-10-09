@@ -2,8 +2,8 @@ import javafx.scene.canvas.GraphicsContext;
 import java.util.Arrays;
 
 public class Shape {
-    private final float[][] vertices;
-    private final float[][] transformedVertices;
+    private float[][] vertices;
+    private float[][] transformedVertices;
     private int[][] edges; // references to connected vertices
     private static float defaultOriginX;
     private static float defaultOriginY;
@@ -195,27 +195,22 @@ public class Shape {
     }
     
     private void transform(float[][] transformationMatrix) {
-        //use parallel stream to process matrix multiplication of vertices in parallel
-        transformedVertices = Arrays.stream(transformedVertices).parallel().map(vertex -> matrixMultiplication(new float[][]{vertex}, transformationMatrix)[0]).toArray(float[][]::new);
+        //process matrix multiplication of vertices in parallel
+        transformedVertices = Arrays.stream(transformedVertices).parallel().map(vertex -> vectorMatrixMultiplication(vertex, transformationMatrix)).toArray(float[][]::new);
     }
     
-    private float[][] matrixMultiplication(float[][] matrix1, float[][] matrix2) {
-        int rows1 = matrix1.length;
-        int cols1 = matrix1[0].length;
-        int rows2 = matrix2.length;
-        int cols2 = matrix2[0].length;
+    private float[] vectorMatrixMultiplication(float[] vector, float[][] matrix) {
+        int vectorCols = vector.length;
+        int matrixRows = matrix.length;
+        int matrixCols = matrix[0].length;
+        float[] result = new float[vectorCols];
         
-        float[][] result = new float[rows1][cols2];
-    
-        for (int i = 0; i < rows1; i++) {
-            for (int j = 0; j < cols2; j++) {
-                result[i][j] = 0;
-                for (int k = 0; k < rows2; k++) { 
-                    result[i][j] += matrix1[i][k] * matrix2[k][j];
-                }
+        for (int i = 0; i < matrixCols; i++) {  // Loop through each column of the matrix
+            for (int j = 0; j < vectorCols; j++) {
+                result[i] += vector[j] * matrix[j][i];
             }
         }
-    
+        
         return result;
     }
     
