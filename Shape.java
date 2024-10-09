@@ -2,9 +2,9 @@ import javafx.scene.canvas.GraphicsContext;
 import java.util.Arrays;
 
 public class Shape {
-    private float[][] vertices;
+    private final float[][] vertices;
     private float[][] transformedVertices;
-    private int[][] edges; // references to connected vertices
+    private final int[][] edges; // references to connected vertices
     private static float defaultOriginX;
     private static float defaultOriginY;
     private float originX; // position on screen
@@ -229,10 +229,6 @@ public class Shape {
             }
             System.out.println("");
         }
-    }
-    
-    public float[][] getVertices() {
-        return vertices;
     }
     
     public static void setDefaultOriginX(float newDefaultOriginX) {
