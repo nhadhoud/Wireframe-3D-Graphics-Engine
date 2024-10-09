@@ -5,20 +5,20 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.Scene;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.control.TextField;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 import java.util.ArrayList;
 
 
@@ -81,8 +81,8 @@ public class Main extends Application {
             zoomAmount += (float) event.getDeltaY() * ZOOM_SENSITIVITY;
         });
         canvas.setOnMouseDragged(event -> {
-            dragMouseX += (float) (event.getX() - previousMouseX) * 0.1;
-            dragMouseY += (float) (event.getY()- previousMouseY) * 0.1;
+            dragMouseX += (float) (event.getX() - previousMouseX) * DRAG_SENSITIVITY;
+            dragMouseY += (float) (event.getY()- previousMouseY) * DRAG_SENSITIVITY;
             previousMouseX = dragMouseX;
             previousMouseY = dragMouseY;
         });
@@ -207,7 +207,7 @@ public class Main extends Application {
             shape.scale(zoomAmount, zoomAmount, zoomAmount);
             shape.rotateOnX(dragMouseY);
             shape.rotateOnY(dragMouseX);
-            shape.translate(shape.getOriginX(), shape.getOriginY(), zoomAmount * 2 + 50);
+            shape.translate(shape.getOriginX(), shape.getOriginY(), zoomAmount * 2);
             //loaded defaultShapes orthographicly projected
             shape.orthographic(-300, 300, -300, 300, 0.1f, 1000f);
             shape.draw(gc);
