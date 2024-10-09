@@ -2,27 +2,27 @@ import javafx.scene.canvas.GraphicsContext;
 import java.util.Arrays;
 
 public class Shape {
-    private final float[][] vertices;
+    private final float[][] VERTICES;
     private float[][] transformedVertices;
-    private final int[][] edges; // references to connected vertices
+    private final int[][] EDGES; // references to connected vertices
     private static float defaultOriginX;
     private static float defaultOriginY;
     private float originX; // position on screen
     private float originY; 
     
-    public Shape(float[][] vertices, int[][] edges) {
-        this.vertices = vertices;
-        this.edges = edges;
+    public Shape(float[][] VERTICES, int[][] EDGES) {
+        this.VERTICES = VERTICES;
+        this.EDGES = EDGES;
         this.originX = defaultOriginX;
         this.originY = defaultOriginY;
         undoTransformations();
     }
     
-    //shapes are drawn in a different position to prevent distortion from translation
+    //shapes are drawn in a different position to prevent unwanted distortion from translation
     public void draw(GraphicsContext gc) {
-        for (int i = 0; i < edges.length; i++) {
-            float[] startVertex = transformedVertices[edges[i][0]];
-            float[] endVertex = transformedVertices[edges[i][1]];
+        for (int i = 0; i < EDGES.length; i++) {
+            float[] startVertex = transformedVertices[EDGES[i][0]];
+            float[] endVertex = transformedVertices[EDGES[i][1]];
             gc.strokeLine(startVertex[0] + originX, startVertex[1] + originY, endVertex[0] + originX, endVertex[1] + originY);
         }
     }
@@ -172,7 +172,7 @@ public class Shape {
         
         transform(transformationMatrix);
         
-        //normalise vertices 
+        //normalise VERTICES 
         for (int i = 0; i < transformedVertices.length; i++) {
             float w = transformedVertices[i][3];
             if (w != 0) {
@@ -195,17 +195,16 @@ public class Shape {
     }
     
     private void transform(float[][] transformationMatrix) {
-        //process matrix multiplication of vertices in parallel
+        //process matrix multiplication of VERTICES in parallel
         transformedVertices = Arrays.stream(transformedVertices).parallel().map(vertex -> vectorMatrixMultiplication(vertex, transformationMatrix)).toArray(float[][]::new);
     }
     
     private float[] vectorMatrixMultiplication(float[] vector, float[][] matrix) {
         int vectorCols = vector.length;
-        int matrixRows = matrix.length;
         int matrixCols = matrix[0].length;
         float[] result = new float[vectorCols];
         
-        for (int i = 0; i < matrixCols; i++) {  // Loop through each column of the matrix
+        for (int i = 0; i < matrixCols; i++) {
             for (int j = 0; j < vectorCols; j++) {
                 result[i] += vector[j] * matrix[j][i];
             }
@@ -215,9 +214,9 @@ public class Shape {
     }
     
     public void undoTransformations() {
-        transformedVertices = new float[vertices.length][vertices[0].length];
-        for (int i = 0; i < vertices.length; i++) {
-            transformedVertices[i] = vertices[i].clone();
+        transformedVertices = new float[VERTICES.length][VERTICES[0].length];
+        for (int i = 0; i < VERTICES.length; i++) {
+            transformedVertices[i] = VERTICES[i].clone();
         }
     }
     
