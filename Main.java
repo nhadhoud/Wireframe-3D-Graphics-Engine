@@ -36,6 +36,10 @@ public class Main extends Application {
     //large defaultShapes are not allowed perspective projection as obj file vectors are not guaranteed to be normalised
     private ArrayList<Shape> loadedShapes = new ArrayList<>();
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void start(Stage stage) {
         Shape.setDefaultOriginX(SCREEN_WIDTH/2);
